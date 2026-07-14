@@ -5,14 +5,14 @@
 gsap.registerPlugin(ScrollTrigger);
 
 const videos = [
-    { category: '口播', src: '口播/健康.mp4' },
-    { category: '口播', src: '口播/控价.mp4' },
-    { category: '口播', src: '口播/衣服.mp4' },
-    { category: '信息流', src: '信息流/保湿水.mp4' },
-    { category: '信息流', src: '信息流/纸巾.mp4' },
-    { category: '信息流', src: '信息流/饼.mp4' },
-    { category: 'AI原创剪辑', src: 'AI原创剪辑/女配成品.mp4' },
-    { category: 'AI原创剪辑', src: 'AI原创剪辑/长廊.mp4' },
+    { category: '口播', src: 'https://s17.aconvert.com/convert/p3r68-cdx67/jpss3-vk4ix.mp4' },
+    { category: '口播', src: 'https://s21.aconvert.com/convert/p3r68-cdx67/izibc-pe5kl.mp4' },
+    { category: '口播', src: 'https://s3.aconvert.com/convert/p3r68-cdx67/bh06p-t7gzg.mp4' },
+    { category: '信息流', src: 'https://s31.aconvert.com/convert/p3r68-cdx67/1su9j-25zi2.mp4' },
+    { category: '信息流', src: 'https://s3.aconvert.com/convert/p3r68-cdx67/72ykb-f3g3c.mp4' },
+    { category: '信息流', src: 'https://s33.aconvert.com/convert/p3r68-cdx67/cpgs6-b35yx.mp4' },
+    { category: 'AI原创剪辑', src: 'https://s3.aconvert.com/convert/p3r68-cdx67/oq9hz-2j6jk.mp4' },
+    { category: 'AI原创剪辑', src: 'https://s31.aconvert.com/convert/p3r68-cdx67/j55e3-j4ufo.mp4' },
 ];
 
 const CATEGORIES = ['口播', '信息流', 'AI原创剪辑'];
@@ -95,6 +95,8 @@ function transitionToMain() {
 
 function playVideo(videoData) {
     if (isAnimating) return;
+    // aconvert 等外链不返回匹配 CORS，不能设 crossOrigin，否则无法播放
+    modalVideo.removeAttribute('crossorigin');
     modalVideo.src = videoData.src;
     modalVideo.load();
     transitionToModal();
@@ -145,13 +147,19 @@ function generateThumbnail(src) {
             resolved = true;
             const w = video.videoWidth, h = video.videoHeight;
             if (w > 0 && h > 0) {
-                const c = document.createElement('canvas');
-                c.width = w; c.height = h;
-                c.getContext('2d').drawImage(video, 0, 0, w, h);
-                const dataUrl = c.toDataURL('image/jpeg', 0.82);
-                thumbnailCache.set(src, dataUrl);
-                cleanup();
-                resolve(dataUrl);
+                try {
+                    const c = document.createElement('canvas');
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(video, 0, 0, w, h);
+                    const dataUrl = c.toDataURL('image/jpeg', 0.82);
+                    thumbnailCache.set(src, dataUrl);
+                    cleanup();
+                    resolve(dataUrl);
+                } catch {
+                    // 跨域视频无法截帧，不影响播放
+                    cleanup();
+                    resolve(null);
+                }
             } else {
                 cleanup();
                 resolve(null);
