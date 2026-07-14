@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欣欣 · 视频作品集</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="loading">
+
+    <svg class="cursor cursor--outer" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+        <circle class="cursor__circle" cx="40" cy="40" r="18"/>
+    </svg>
+    <svg class="cursor cursor--inner" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+        <circle class="cursor__circle" cx="40" cy="40" r="3"/>
+    </svg>
+
+    <svg class="overlay" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path class="overlay__path" vector-effect="non-scaling-stroke"
+              d="M 0 100 V 100 Q 50 100 100 100 V 100 z"/>
+    </svg>
+
+    <div class="modal" id="modal">
+        <div class="modal__backdrop"></div>
+        <button class="modal__close" id="modalClose" aria-label="关闭">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="modal__video-wrap">
+            <video id="modalVideo" controls playsinline disablePictureInPicture controlsList="nodownload noremoteplayback"></video>
+        </div>
+    </div>
+
+    <header class="header header--light" id="header">
+        <a href="#hero" class="header__brand">
+            <span class="header__mark" aria-hidden="true"></span>
+            <span class="header__name">欣欣</span>
+        </a>
+        <nav class="header__nav" id="headerNav">
+            <a href="#cat-口播" class="header__link" data-cat="口播">口播</a>
+            <a href="#cat-信息流" class="header__link" data-cat="信息流">信息流</a>
+            <a href="#cat-AI原创剪辑" class="header__link" data-cat="AI原创剪辑">AI 剪辑</a>
+        </nav>
+        <span class="header__count"><span id="workCount">8</span> Works</span>
+    </header>
+
+    <main>
+
+        <section class="hero" id="hero">
+            <div class="hero__frame" aria-hidden="true">
+                <span class="hero__corner hero__corner--tl"></span>
+                <span class="hero__corner hero__corner--tr"></span>
+                <span class="hero__corner hero__corner--bl"></span>
+                <span class="hero__corner hero__corner--br"></span>
+            </div>
+
+            <div class="hero__marquee hero__marquee--top" aria-hidden="true">
+                <div class="hero__marquee-track">
+                    <span>EDIT · COLOR · MOTION · STORY · CUT ·</span>
+                    <span>EDIT · COLOR · MOTION · STORY · CUT ·</span>
+                </div>
+            </div>
+
+            <div class="hero__inner">
+                <div class="hero__col hero__col--left">
+                    <p class="hero__label reveal-item">
+                        <span class="hero__label-dot"></span>
+                        Video Editor · 2026
+                    </p>
+                    <h1 class="hero__name">
+                        <span class="hero__name-line">I'm</span>
+                        <span class="hero__name-line hero__name-line--display">欣欣</span>
+                    </h1>
+                    <p class="hero__tagline reveal-item">短视频剪辑 · 后期包装 · AI 创作</p>
+                </div>
+
+                <div class="hero__col hero__col--right">
+                    <div class="hero__bio reveal-item">
+                        <p>专注于短视频内容的策划、剪辑与后期包装，擅长口播类、信息流广告及 AI 辅助创作。</p>
+                        <p>熟悉从脚本到成片的完整制作流程，注重节奏感与视觉表达。</p>
+                    </div>
+                    <a href="mailto:yan572414@163.com" class="hero__email reveal-item">
+                        <span class="hero__email-label">Contact</span>
+                        <span class="hero__email-value">yan572414@163.com</span>
+                        <svg class="hero__email-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2">
+                            <path d="M3 8h10M9 4l4 4-4 4"/>
+                        </svg>
+                    </a>
+                    <div class="hero__skills reveal-item">
+                        <span>Premiere</span><span>剪映</span><span>Photoshop</span><span>Illustrator</span><span>Seedance</span><span>ComfyUI</span><span>Stable Diffusion</span><span>ChatGPT</span><span>Gemini</span><span>Claude</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero__marquee hero__marquee--bottom" aria-hidden="true">
+                <div class="hero__marquee-track hero__marquee-track--reverse">
+                    <span>PORTFOLIO · SHOWREEL · SELECTED WORKS ·</span>
+                    <span>PORTFOLIO · SHOWREEL · SELECTED WORKS ·</span>
+                </div>
+            </div>
+
+            <button class="hero__scroll-btn" id="scrollToWorks" aria-label="查看作品">
+                <span class="hero__scroll-line"></span>
+                <span class="hero__scroll-text">Scroll</span>
+            </button>
+        </section>
+
+        <div class="curtain" id="curtain">
+            <div class="curtain__panel"></div>
+        </div>
+
+        <div class="works" id="works">
+
+            <header class="works__head">
+                <div class="works__head-left">
+                    <span class="works__eyebrow">Creative Hub</span>
+                    <h2 class="works__title">精选作品</h2>
+                </div>
+                <p class="works__desc">口播 · 信息流 · AI 原创剪辑 — 共 <span id="workCountDup">8</span> 部短片</p>
+            </header>
+
+            <div class="filmstrip" aria-hidden="true">
+                <div class="filmstrip__inner">
+                    <div class="filmstrip__track" id="filmstripTrack"></div>
+                </div>
+            </div>
+
+            <nav class="filter-nav" id="filterNav" aria-label="作品分类">
+                <button class="filter-nav__btn is-active" data-cat="all">
+                    <span class="filter-nav__text">全部</span>
+                </button>
+                <button class="filter-nav__btn" data-cat="口播">
+                    <span class="filter-nav__text">口播</span>
+                </button>
+                <button class="filter-nav__btn" data-cat="信息流">
+                    <span class="filter-nav__text">信息流</span>
+                </button>
+                <button class="filter-nav__btn" data-cat="AI原创剪辑">
+                    <span class="filter-nav__text">AI 剪辑</span>
+                </button>
+                <span class="filter-nav__indicator" aria-hidden="true"></span>
+            </nav>
+
+            <div class="showcase" id="showcase">
+
+                <section class="category" id="cat-口播" data-category="口播">
+                    <header class="category__head">
+                        <div class="category__head-row">
+                            <span class="category__num">01</span>
+                            <span class="category__rule"></span>
+                            <h2 class="category__title">口播</h2>
+                        </div>
+                        <p class="category__meta">Talking Head · Brand Voice</p>
+                    </header>
+                    <div class="category__grid" id="row-口播"></div>
+                </section>
+
+                <section class="category" id="cat-信息流" data-category="信息流">
+                    <header class="category__head">
+                        <div class="category__head-row">
+                            <span class="category__num">02</span>
+                            <span class="category__rule"></span>
+                            <h2 class="category__title">信息流</h2>
+                        </div>
+                        <p class="category__meta">Feed Ads · Product Story</p>
+                    </header>
+                    <div class="category__grid" id="row-信息流"></div>
+                </section>
+
+                <section class="category" id="cat-AI原创剪辑" data-category="AI原创剪辑">
+                    <header class="category__head">
+                        <div class="category__head-row">
+                            <span class="category__num">03</span>
+                            <span class="category__rule"></span>
+                            <h2 class="category__title">AI 原创剪辑</h2>
+                        </div>
+                        <p class="category__meta">Generative · Experimental</p>
+                    </header>
+                    <div class="category__grid" id="row-AI原创剪辑"></div>
+                </section>
+
+            </div>
+
+            <footer class="footer">
+                <div class="footer__left">
+                    <span class="footer__mark" aria-hidden="true"></span>
+                    <p class="footer__copy">© 2026 · 欣欣</p>
+                </div>
+                <a href="mailto:yan572414@163.com" class="footer__email">yan572414@163.com</a>
+            </footer>
+
+        </div>
+
+    </main>
+
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
