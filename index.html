@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欣欣 · 视频作品集</title>
+    <title>XINXIN — Editor</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,19 +41,16 @@
     <header class="header header--light" id="header">
         <a href="#hero" class="header__brand">
             <span class="header__mark" aria-hidden="true"></span>
-            <span class="header__name">欣欣</span>
+            <span class="header__name">XINXIN</span>
         </a>
-        <nav class="header__nav" id="headerNav">
-            <a href="#cat-口播" class="header__link" data-cat="口播">口播</a>
-            <a href="#cat-信息流" class="header__link" data-cat="信息流">信息流</a>
-            <a href="#cat-AI原创剪辑" class="header__link" data-cat="AI原创剪辑">AI 剪辑</a>
-        </nav>
         <span class="header__count"><span id="workCount">8</span> Works</span>
     </header>
 
     <main>
 
         <section class="hero" id="hero">
+            <div class="hero__glow hero__glow--a" aria-hidden="true"></div>
+            <div class="hero__glow hero__glow--b" aria-hidden="true"></div>
             <div class="hero__frame" aria-hidden="true">
                 <span class="hero__corner hero__corner--tl"></span>
                 <span class="hero__corner hero__corner--tr"></span>
@@ -73,7 +72,8 @@
                         Video Editor · 2026
                     </p>
                     <h1 class="hero__name">
-                        <span class="hero__name-line">I'm</span>
+                        <span class="hero__name-line hero__name-line--hello">Hello,</span>
+                        <span class="hero__name-line hero__name-line--im">I'm</span>
                         <span class="hero__name-line hero__name-line--display">欣欣</span>
                     </h1>
                     <p class="hero__tagline reveal-item">短视频剪辑 · 后期包装 · AI 创作</p>
@@ -121,7 +121,7 @@
                     <span class="works__eyebrow">Creative Hub</span>
                     <h2 class="works__title">精选作品</h2>
                 </div>
-                <p class="works__desc">口播 · 信息流 · AI 原创剪辑 — 共 <span id="workCountDup">8</span> 部短片</p>
+                <p class="works__desc">口播 · 信息流 · AI 原创剪辑 — 共 <span id="workCountDup">8</span> 部短片<br><span class="works__hint">点开即可播放</span></p>
             </header>
 
             <div class="filmstrip" aria-hidden="true">

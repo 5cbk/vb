@@ -5,14 +5,14 @@
 gsap.registerPlugin(ScrollTrigger);
 
 const videos = [
-    { category: '口播', src: 'https://s17.aconvert.com/convert/p3r68-cdx67/jpss3-vk4ix.mp4' },
-    { category: '口播', src: 'https://s21.aconvert.com/convert/p3r68-cdx67/izibc-pe5kl.mp4' },
-    { category: '口播', src: 'https://s3.aconvert.com/convert/p3r68-cdx67/bh06p-t7gzg.mp4' },
-    { category: '信息流', src: 'https://s31.aconvert.com/convert/p3r68-cdx67/1su9j-25zi2.mp4' },
-    { category: '信息流', src: 'https://s3.aconvert.com/convert/p3r68-cdx67/72ykb-f3g3c.mp4' },
-    { category: '信息流', src: 'https://s33.aconvert.com/convert/p3r68-cdx67/cpgs6-b35yx.mp4' },
-    { category: 'AI原创剪辑', src: 'https://s3.aconvert.com/convert/p3r68-cdx67/oq9hz-2j6jk.mp4' },
-    { category: 'AI原创剪辑', src: 'https://s31.aconvert.com/convert/p3r68-cdx67/j55e3-j4ufo.mp4' },
+    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%8E%A7%E4%BB%B7.mp4' },
+    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%81%A5%E5%BA%B7.mp4' },
+    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E8%A1%A3%E6%9C%8D.mp4' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%A5%BC.mp4' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E7%BA%B8%E5%B7%BE.mp4' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E4%BF%9D%E6%B9%BF%E6%B0%B4.mp4' },
+    { category: 'AI原创剪辑', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%95%BF%E5%BB%8A.mp4' },
+    { category: 'AI原创剪辑', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%A5%B3%E9%85%8D%E6%88%90%E5%93%81.mp4' },
 ];
 
 const CATEGORIES = ['口播', '信息流', 'AI原创剪辑'];
@@ -515,6 +515,23 @@ function animateHero() {
         },
     });
 
+    gsap.fromTo('.hero__glow',
+        { opacity: 0, scale: 0.94 },
+        {
+            opacity: 1,
+            scale: 1,
+            duration: 1.6,
+            stagger: 0.12,
+            ease: 'power2.out',
+            clearProps: 'opacity,scale,transform',
+        }
+    );
+
+    gsap.fromTo('.hero__corner',
+        { opacity: 0 },
+        { opacity: 1, duration: 1, stagger: 0.06, delay: 0.15, ease: 'power2.out' }
+    );
+
     tl.to('.hero__name-line', {
         y: 0,
         duration: 1.1,
@@ -526,7 +543,12 @@ function animateHero() {
         opacity: 1,
         duration: 0.85,
         stagger: 0.07,
-    }, '-=0.5');
+    }, '-=0.5')
+    .fromTo('.hero__marquee',
+        { opacity: 0 },
+        { opacity: 0.07, duration: 1.2, ease: 'power1.out' },
+        '-=0.8'
+    );
 }
 
 // ============================================================
@@ -673,22 +695,6 @@ function setupScrollAnimations() {
             },
         });
     });
-
-    CATEGORIES.forEach(cat => {
-        ScrollTrigger.create({
-            trigger: `#cat-${cat}`,
-            start: 'top 50%',
-            end: 'bottom 50%',
-            onEnter: () => setActiveNav(cat),
-            onEnterBack: () => setActiveNav(cat),
-        });
-    });
-}
-
-function setActiveNav(cat) {
-    document.querySelectorAll('.header__link').forEach(link => {
-        link.classList.toggle('is-active', link.dataset.cat === cat);
-    });
 }
 
 // ============================================================
@@ -710,6 +716,9 @@ modalVideo.addEventListener('loadedmetadata', fitModalToVideo);
 function init() {
     gsap.set('.hero__name-line', { y: '110%' });
     gsap.set('.hero__marquee-track', { scale: 1.4 });
+    gsap.set('.hero__marquee', { opacity: 0 });
+    gsap.set('.hero__glow', { opacity: 0 });
+    gsap.set('.hero__corner', { opacity: 0 });
 
     buildAllCards();
     setupLenis();
