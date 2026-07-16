@@ -8,14 +8,15 @@ const videos = [
     { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%8E%A7%E4%BB%B7.mp4' },
     { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%81%A5%E5%BA%B7.mp4' },
     { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E8%A1%A3%E6%9C%8D.mp4' },
-    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%A5%BC.mp4' },
     { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E7%BA%B8%E5%B7%BE.mp4' },
     { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E4%BF%9D%E6%B9%BF%E6%B0%B4.mp4' },
-    { category: 'AI原创剪辑', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%95%BF%E5%BB%8A.mp4' },
-    { category: 'AI原创剪辑', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%A5%B3%E9%85%8D%E6%88%90%E5%93%81.mp4' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%A5%BC.mp4' },
+    { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%95%BF%E5%BB%8A.mp4' },
+    { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%A5%B3%E9%85%8D%E6%88%90%E5%93%81.mp4' },
+    { category: '混剪', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%B7%B7%E5%89%AA.mp4' },
 ];
 
-const CATEGORIES = ['口播', '信息流', 'AI原创剪辑'];
+const CATEGORIES = ['口播', '信息流', 'AI生成', '混剪'];
 
 const overlayPath = document.querySelector('.overlay__path');
 const modal = document.getElementById('modal');
@@ -27,16 +28,15 @@ const scrollToWorksBtn = document.getElementById('scrollToWorks');
 const curtainPanel = document.querySelector('.curtain__panel');
 const worksSection = document.getElementById('works');
 
-const thumbnailCache = new Map();
 let page = 1;
 let isAnimating = false;
 let curtainPlayed = false;
 
 let lenis;
 
-// ============================================================
-// SVG PATH TRANSITION
-// ============================================================
+function switchPages() {
+    modal.classList.toggle('open', page === 2);
+}
 
 const paths = {
     step1: {
@@ -57,15 +57,10 @@ const paths = {
     }
 };
 
-function switchPages() {
-    modal.classList.toggle('open', page === 2);
-}
-
 function transitionToModal() {
     if (isAnimating) return;
     isAnimating = true;
     page = 2;
-
     gsap.timeline({ onComplete: () => { isAnimating = false; } })
         .set(overlayPath, { attr: { d: paths.step1.unfilled } })
         .to(overlayPath, { duration: 0.7, ease: 'power4.in', attr: { d: paths.step1.inBetween.curve1 } }, 0)
@@ -79,7 +74,6 @@ function transitionToMain() {
     if (isAnimating) return;
     isAnimating = true;
     page = 1;
-
     gsap.timeline({ onComplete: () => { isAnimating = false; } })
         .set(overlayPath, { attr: { d: paths.step2.unfilled } })
         .to(overlayPath, { duration: 0.7, ease: 'power4.in', attr: { d: paths.step2.inBetween.curve2 } }, 0)
@@ -89,13 +83,8 @@ function transitionToMain() {
         .to(overlayPath, { duration: 0.9, ease: 'power4', attr: { d: paths.step1.unfilled } });
 }
 
-// ============================================================
-// PLAY / CLOSE
-// ============================================================
-
 function playVideo(videoData) {
     if (isAnimating) return;
-    // aconvert 等外链不返回匹配 CORS，不能设 crossOrigin，否则无法播放
     modalVideo.removeAttribute('crossorigin');
     modalVideo.src = videoData.src;
     modalVideo.load();
@@ -108,7 +97,24 @@ function fitModalToVideo() {
     const vw = modalVideo.videoWidth;
     const vh = modalVideo.videoHeight;
     if (!wrap || !vw || !vh) return;
-    wrap.style.aspectRatio = `${vw} / ${vh}`;
+
+    const maxW = window.innerWidth * 0.9;
+    const maxH = window.innerHeight * 0.85;
+    const videoRatio = vw / vh;
+
+    let w, h;
+    if (videoRatio >= 1) {
+        w = Math.min(vw, maxW);
+        h = w / videoRatio;
+        if (h > maxH) { h = maxH; w = h * videoRatio; }
+    } else {
+        h = Math.min(vh, maxH);
+        w = h * videoRatio;
+        if (w > maxW) { w = maxW; h = w / videoRatio; }
+    }
+
+    wrap.style.width = `${w}px`;
+    wrap.style.height = `${h}px`;
 }
 
 function closeVideo() {
@@ -117,99 +123,11 @@ function closeVideo() {
     transitionToMain();
     setTimeout(() => {
         modalVideo.removeAttribute('src');
-        document.querySelector('.modal__video-wrap')?.style.removeProperty('aspect-ratio');
+        const wrap = document.querySelector('.modal__video-wrap');
+        wrap?.style.removeProperty('width');
+        wrap?.style.removeProperty('height');
+        wrap?.style.removeProperty('aspect-ratio');
     }, 1100);
-}
-
-// ============================================================
-// THUMBNAILS
-// ============================================================
-
-function generateThumbnail(src) {
-    if (thumbnailCache.has(src)) {
-        return Promise.resolve(thumbnailCache.get(src));
-    }
-
-    return new Promise((resolve) => {
-        const video = document.createElement('video');
-        video.preload = 'auto';
-        video.muted = true;
-        video.playsInline = true;
-        video.src = src;
-        video.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;top:-10px;left:-10px;';
-        document.body.appendChild(video);
-
-        let resolved = false;
-        const cleanup = () => { if (video.parentNode) video.parentNode.removeChild(video); };
-
-        const capture = () => {
-            if (resolved) return;
-            resolved = true;
-            const w = video.videoWidth, h = video.videoHeight;
-            if (w > 0 && h > 0) {
-                try {
-                    const c = document.createElement('canvas');
-                    c.width = w; c.height = h;
-                    c.getContext('2d').drawImage(video, 0, 0, w, h);
-                    const dataUrl = c.toDataURL('image/jpeg', 0.82);
-                    thumbnailCache.set(src, dataUrl);
-                    cleanup();
-                    resolve(dataUrl);
-                } catch {
-                    // 跨域视频无法截帧，不影响播放
-                    cleanup();
-                    resolve(null);
-                }
-            } else {
-                cleanup();
-                resolve(null);
-            }
-        };
-
-        video.addEventListener('loadeddata', () => {
-            if (resolved) return;
-            if (video.duration > 0.2) video.currentTime = 0.1;
-            else capture();
-        });
-        video.addEventListener('seeked', () => { if (!resolved) capture(); });
-        video.addEventListener('error', () => { if (!resolved) { resolved = true; cleanup(); resolve(null); } });
-
-        setTimeout(() => {
-            if (!resolved) {
-                resolved = true;
-                if (video.readyState >= 2 && video.videoWidth > 0) capture();
-                else { cleanup(); resolve(null); }
-            }
-        }, 5000);
-    });
-}
-
-// ============================================================
-// VIDEO CARDS
-// ============================================================
-
-function buildFilmstrip() {
-    const track = document.getElementById('filmstripTrack');
-    if (!track || thumbnailCache.size < videos.length) return;
-
-    track.innerHTML = '';
-    const urls = videos.map(v => thumbnailCache.get(v.src)).filter(Boolean);
-
-    const appendItems = () => {
-        urls.forEach(url => {
-            const item = document.createElement('div');
-            item.className = 'filmstrip__item';
-            const img = document.createElement('img');
-            img.src = url;
-            img.alt = '';
-            img.draggable = false;
-            item.appendChild(img);
-            track.appendChild(item);
-        });
-    };
-
-    appendItems();
-    appendItems();
 }
 
 const CARD_TILTS = [-1.4, 0.9, -0.6, 1.1, -0.8, 0.5, -1, 0.7];
@@ -265,14 +183,11 @@ function buildCard(videoData, index) {
     setupCardPreview(card, preview, videoData.src);
     setupCardTilt(card, media);
 
-    generateThumbnail(videoData.src).then(() => buildFilmstrip());
-
     return card;
 }
 
 function setupCardCover(card, preview, loading, src) {
     let frameReady = false;
-
     const revealCover = () => {
         if (frameReady || card.classList.contains('is-previewing')) return;
         frameReady = true;
@@ -280,59 +195,39 @@ function setupCardCover(card, preview, loading, src) {
         loading.classList.add('hidden');
         card.classList.add('has-cover');
     };
-
     preview.addEventListener('loadeddata', () => {
         if (preview.duration > 0.05) preview.currentTime = 0.05;
         else revealCover();
     });
     preview.addEventListener('seeked', revealCover);
     preview.addEventListener('error', () => loading.classList.add('hidden'));
-
     preview.src = src;
 }
 
 function setupCardTilt(card, media) {
     if (window.matchMedia('(hover: none)').matches) return;
-
     card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-        gsap.to(media, {
-            rotateY: x * 10,
-            rotateX: -y * 10,
-            duration: 0.45,
-            ease: 'power2.out',
-            overwrite: true,
-        });
+        gsap.to(media, { rotateY: x * 10, rotateX: -y * 10, duration: 0.45, ease: 'power2.out', overwrite: true });
     });
-
     card.addEventListener('mouseleave', () => {
-        gsap.to(media, {
-            rotateY: 0,
-            rotateX: 0,
-            duration: 0.7,
-            ease: 'power2.out',
-            onComplete: () => gsap.set(media, { clearProps: 'transform' }),
-        });
+        gsap.to(media, { rotateY: 0, rotateX: 0, duration: 0.7, ease: 'power2.out', onComplete: () => gsap.set(media, { clearProps: 'transform' }) });
     });
 }
 
 function setupCardPreview(card, preview, src) {
     if (window.matchMedia('(hover: none)').matches) return;
-
     card.addEventListener('mouseenter', () => {
         card.classList.add('is-previewing');
         preview.currentTime = 0;
         preview.play().catch(() => {});
     });
-
     card.addEventListener('mouseleave', () => {
         card.classList.remove('is-previewing');
         preview.pause();
-        if (card.classList.contains('has-cover')) {
-            preview.currentTime = 0.05;
-        }
+        if (card.classList.contains('has-cover')) preview.currentTime = 0.05;
     });
 }
 
@@ -346,17 +241,9 @@ function buildAllCards() {
     });
 }
 
-// ============================================================
-// CURTAIN ANIMATION
-// ============================================================
-
 function playCurtainAnimation(onComplete) {
-    if (curtainPlayed) {
-        onComplete?.();
-        return;
-    }
+    if (curtainPlayed) { onComplete?.(); return; }
     curtainPlayed = true;
-
     const tl = gsap.timeline({
         onComplete: () => {
             gsap.set(curtainPanel, { clearProps: 'transform' });
@@ -364,7 +251,6 @@ function playCurtainAnimation(onComplete) {
             onComplete?.();
         }
     });
-
     tl.set(curtainPanel, { display: 'block', yPercent: -100 })
       .to(curtainPanel, { yPercent: 0, duration: 0.65, ease: 'power3.inOut' })
       .to(curtainPanel, { yPercent: 100, duration: 0.75, ease: 'power4.in' }, '+=0.04');
@@ -382,45 +268,20 @@ function smoothScrollTo(y) {
 function scrollToWorks() {
     const heroST = ScrollTrigger.getById('heroPin');
     const targetY = heroST ? heroST.end : worksSection.offsetTop;
-
-    playCurtainAnimation(() => {
-        smoothScrollTo(targetY);
-    });
+    playCurtainAnimation(() => smoothScrollTo(targetY));
 }
 
 function setupCurtainScroll() {
     ScrollTrigger.create({
-        id: 'heroPin',
-        trigger: '#hero',
-        start: 'top top',
-        end: '+=90%',
-        pin: true,
-        pinSpacing: true,
-        anticipatePin: 1,
+        id: 'heroPin', trigger: '#hero', start: 'top top', end: '+=90%', pin: true, pinSpacing: true, anticipatePin: 1,
         onUpdate: (self) => {
-            gsap.to('.hero__inner', {
-                opacity: 1 - self.progress * 1.2,
-                y: -self.progress * 60,
-                duration: 0.1,
-                overwrite: true,
-            });
-            gsap.to('.hero__marquee-track', {
-                scale: 1.4 - self.progress * 0.35,
-                duration: 0.1,
-                overwrite: true,
-            });
-            if (self.progress > 0.45 && !curtainPlayed) {
-                playCurtainAnimation();
-            }
+            gsap.to('.hero__inner', { opacity: 1 - self.progress * 1.2, y: -self.progress * 60, duration: 0.1, overwrite: true });
+            gsap.to('.hero__marquee-track', { scale: 1.4 - self.progress * 0.35, duration: 0.1, overwrite: true });
+            if (self.progress > 0.45 && !curtainPlayed) playCurtainAnimation();
         },
     });
-
     scrollToWorksBtn.addEventListener('click', scrollToWorks);
 }
-
-// ============================================================
-// FILTER NAV
-// ============================================================
 
 function moveFilterIndicator(activeBtn) {
     const indicator = filterNav.querySelector('.filter-nav__indicator');
@@ -432,19 +293,15 @@ function moveFilterIndicator(activeBtn) {
 function setupFilterNav() {
     const buttons = filterNav.querySelectorAll('.filter-nav__btn');
     const sections = document.querySelectorAll('.category');
-
     const setActive = (btn) => {
         buttons.forEach(b => b.classList.toggle('is-active', b === btn));
         moveFilterIndicator(btn);
     };
-
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
             const cat = btn.dataset.cat;
             setActive(btn);
-            sections.forEach(s => {
-                s.classList.toggle('is-hidden', cat !== 'all' && s.dataset.category !== cat);
-            });
+            sections.forEach(s => s.classList.toggle('is-hidden', cat !== 'all' && s.dataset.category !== cat));
             if (cat !== 'all') {
                 const target = document.getElementById(`cat-${cat}`);
                 if (target) {
@@ -455,55 +312,30 @@ function setupFilterNav() {
             ScrollTrigger.refresh();
         });
     });
-
     requestAnimationFrame(() => moveFilterIndicator(filterNav.querySelector('.filter-nav__btn.is-active')));
-    window.addEventListener('resize', () => {
-        moveFilterIndicator(filterNav.querySelector('.filter-nav__btn.is-active'));
-    });
+    window.addEventListener('resize', () => moveFilterIndicator(filterNav.querySelector('.filter-nav__btn.is-active')));
 }
-
-// ============================================================
-// CURSOR
-// ============================================================
 
 function setupCursor() {
     if (window.matchMedia('(hover: none)').matches) return;
-
     const outer = document.querySelector('.cursor--outer');
     const inner = document.querySelector('.cursor--inner');
     if (!outer || !inner) return;
-
     const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     const mouse = { x: pos.x, y: pos.y };
-
     gsap.set([outer, inner], { xPercent: -50, yPercent: -50, x: pos.x, y: pos.y });
-
-    document.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-    });
-
+    document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
     gsap.ticker.add(() => {
         pos.x += (mouse.x - pos.x) * 0.15;
         pos.y += (mouse.y - pos.y) * 0.15;
         gsap.set(outer, { x: pos.x, y: pos.y });
         gsap.set(inner, { x: mouse.x, y: mouse.y });
     });
-
     const hoverables = 'a, button, .hub-card, .filter-nav__btn, .modal__close, .hero__email';
-    document.addEventListener('mouseover', (e) => {
-        if (e.target.closest(hoverables)) document.body.classList.add('cursor-hover');
-    });
-    document.addEventListener('mouseout', (e) => {
-        if (e.target.closest(hoverables)) document.body.classList.remove('cursor-hover');
-    });
-
+    document.addEventListener('mouseover', (e) => { if (e.target.closest(hoverables)) document.body.classList.add('cursor-hover'); });
+    document.addEventListener('mouseout', (e) => { if (e.target.closest(hoverables)) document.body.classList.remove('cursor-hover'); });
     document.body.classList.add('cursor-ready');
 }
-
-// ============================================================
-// HERO ANIMATION
-// ============================================================
 
 function animateHero() {
     const tl = gsap.timeline({
@@ -514,122 +346,24 @@ function animateHero() {
             scrollToWorksBtn.classList.add('is-ready');
         },
     });
-
-    gsap.fromTo('.hero__glow',
-        { opacity: 0, scale: 0.94 },
-        {
-            opacity: 1,
-            scale: 1,
-            duration: 1.6,
-            stagger: 0.12,
-            ease: 'power2.out',
-            clearProps: 'opacity,scale,transform',
-        }
-    );
-
-    gsap.fromTo('.hero__corner',
-        { opacity: 0 },
-        { opacity: 1, duration: 1, stagger: 0.06, delay: 0.15, ease: 'power2.out' }
-    );
-
-    tl.to('.hero__name-line', {
-        y: 0,
-        duration: 1.1,
-        stagger: 0.12,
-        delay: 0.2,
-    })
-    .to('.reveal-item', {
-        y: 0,
-        opacity: 1,
-        duration: 0.85,
-        stagger: 0.07,
-    }, '-=0.5')
-    .fromTo('.hero__marquee',
-        { opacity: 0 },
-        { opacity: 0.07, duration: 1.2, ease: 'power1.out' },
-        '-=0.8'
-    );
+    gsap.fromTo('.hero__glow', { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 1.6, stagger: 0.12, ease: 'power2.out', clearProps: 'opacity,scale,transform' });
+    gsap.fromTo('.hero__corner', { opacity: 0 }, { opacity: 1, duration: 1, stagger: 0.06, delay: 0.15, ease: 'power2.out' });
+    tl.to('.hero__name-line', { y: 0, duration: 1.1, stagger: 0.12, delay: 0.2 })
+      .to('.reveal-item', { y: 0, opacity: 1, duration: 0.85, stagger: 0.07 }, '-=0.5')
+      .fromTo('.hero__marquee', { opacity: 0 }, { opacity: 0.07, duration: 1.2, ease: 'power1.out' }, '-=0.8');
 }
-
-// ============================================================
-// LENIS + SCROLL PARALLAX
-// ============================================================
 
 function setupLenis() {
     if (typeof Lenis === 'undefined') return;
-
-    lenis = new Lenis({
-        duration: 1.15,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-    });
-
+    lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
-
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 }
 
-function setupScrollParallax() {
-    gsap.fromTo('.works__title',
-        { yPercent: 30 },
-        {
-            yPercent: -15,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: '.works__head',
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 0.8,
-            },
-        }
-    );
-
-    document.querySelectorAll('.category__head').forEach(head => {
-        gsap.fromTo(head,
-            { yPercent: 40, opacity: 0.5 },
-            {
-                yPercent: -20,
-                opacity: 1,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: head,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 0.6,
-                },
-            }
-        );
-    });
-
-    document.querySelectorAll('.hub-card').forEach(card => {
-        const thumbWrap = card.querySelector('.card__thumb-wrap');
-        if (!thumbWrap) return;
-
-        gsap.fromTo(thumbWrap,
-            { yPercent: -10 },
-            {
-                yPercent: 10,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 0.5,
-                },
-            }
-        );
-    });
-}
-
-// ============================================================
-// HEADER THEME + PROXIMITY GRID
-// ============================================================
-
 function setupHeaderTheme() {
     ScrollTrigger.create({
-        trigger: worksSection,
-        start: 'top 80%',
+        trigger: worksSection, start: 'top 80%',
         onEnter: () => header.classList.add('header--scrolled'),
         onLeaveBack: () => header.classList.remove('header--scrolled'),
     });
@@ -637,27 +371,20 @@ function setupHeaderTheme() {
 
 function setupProximityGrid() {
     if (window.matchMedia('(hover: none)').matches) return;
-
     const showcase = document.getElementById('showcase');
     if (!showcase) return;
-
-    const maxDist = 200;
-    const maxScale = 0.035;
+    const maxDist = 200, maxScale = 0.035;
     let inShowcase = false;
-
     showcase.addEventListener('mouseenter', () => { inShowcase = true; });
     showcase.addEventListener('mouseleave', () => {
         inShowcase = false;
         gsap.to('.hub-card.is-visible', { scale: 1, duration: 0.5, ease: 'power2.out' });
     });
-
     document.addEventListener('mousemove', (e) => {
         if (!inShowcase) return;
-
         document.querySelectorAll('.hub-card.is-visible').forEach(card => {
             const rect = card.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
+            const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
             const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
             const influence = Math.max(0, 1 - dist / maxDist);
             gsap.to(card, { scale: 1 + influence * maxScale, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
@@ -665,15 +392,10 @@ function setupProximityGrid() {
     });
 }
 
-// ============================================================
-// SCROLL REVEAL
-// ============================================================
-
 function setupScrollAnimations() {
     document.querySelectorAll('.category').forEach(section => {
         const title = section.querySelector('.category__title');
         const cards = section.querySelectorAll('.hub-card');
-
         if (title) {
             const inner = document.createElement('span');
             inner.className = 'category__title-inner';
@@ -681,37 +403,21 @@ function setupScrollAnimations() {
             title.textContent = '';
             title.appendChild(inner);
         }
-
         ScrollTrigger.create({
-            trigger: section,
-            start: 'top 80%',
-            once: true,
+            trigger: section, start: 'top 80%', once: true,
             onEnter: () => {
                 section.querySelector('.category__title-inner')?.classList.add('is-visible');
-                cards.forEach((card, i) => {
-                    card.style.animationDelay = `${i * 0.08}s`;
-                    card.classList.add('is-visible');
-                });
+                cards.forEach((card, i) => { card.style.animationDelay = `${i * 0.08}s`; card.classList.add('is-visible'); });
             },
         });
     });
 }
 
-// ============================================================
-// EVENTS
-// ============================================================
-
 modalClose.addEventListener('click', closeVideo);
 modal.querySelector('.modal__backdrop').addEventListener('click', closeVideo);
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('open')) closeVideo();
-});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeVideo(); });
 modalVideo.addEventListener('contextmenu', e => e.preventDefault());
 modalVideo.addEventListener('loadedmetadata', fitModalToVideo);
-
-// ============================================================
-// INIT
-// ============================================================
 
 function init() {
     gsap.set('.hero__name-line', { y: '110%' });
@@ -728,17 +434,10 @@ function init() {
     setupHeaderTheme();
     setupProximityGrid();
     setupScrollAnimations();
-    setupScrollParallax();
     animateHero();
 
     document.getElementById('workCount').textContent = videos.length;
     document.getElementById('workCountDup').textContent = videos.length;
-
-    videos.forEach(v => generateThumbnail(v.src));
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
-}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }

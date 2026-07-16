@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XINXIN — Editor</title>
+    <title>𝕩𝕚𝕟𝕩𝕚𝕟-𝔼𝕕𝕚𝕥𝕠𝕣</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="stylesheet" href="css/style.css">
+    
+    <!-- 原本的 Google 字体 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- 欣欣的专属字体 (851MkPOP) HTML强化版引入 -->
+    <link href="https://fontsapi.zeoseven.com/60/main/result.css" onload="this.rel='stylesheet'" rel="preload" as="style" crossorigin />
+    <noscript><link rel="stylesheet" href="https://fontsapi.zeoseven.com/60/main/result.css" /></noscript>
+
     <script>document.documentElement.classList.add('js');</script>
 </head>
 <body class="loading">
@@ -34,7 +41,7 @@
             </svg>
         </button>
         <div class="modal__video-wrap">
-            <video id="modalVideo" controls playsinline disablePictureInPicture controlsList="nodownload noremoteplayback"></video>
+            <video id="modalVideo" preload="none" controls playsinline disablePictureInPicture controlsList="nodownload noremoteplayback"></video>
         </div>
     </div>
 
@@ -76,7 +83,7 @@
                         <span class="hero__name-line hero__name-line--im">I'm</span>
                         <span class="hero__name-line hero__name-line--display">欣欣</span>
                     </h1>
-                    <p class="hero__tagline reveal-item">短视频剪辑 · 后期包装 · AI 创作</p>
+                    <p class="hero__tagline reveal-item">短视频剪辑 · 后期包装 · AI 生成</p>
                 </div>
 
                 <div class="hero__col hero__col--right">
@@ -121,14 +128,8 @@
                     <span class="works__eyebrow">Creative Hub</span>
                     <h2 class="works__title">精选作品</h2>
                 </div>
-                <p class="works__desc">口播 · 信息流 · AI 原创剪辑 — 共 <span id="workCountDup">8</span> 部短片<br><span class="works__hint">点开即可播放</span></p>
+                <p class="works__desc">口播 · 信息流 · AI 生成 — 共 <span id="workCountDup">8</span> 部短片<br><span class="works__hint">点开即可播放</span></p>
             </header>
-
-            <div class="filmstrip" aria-hidden="true">
-                <div class="filmstrip__inner">
-                    <div class="filmstrip__track" id="filmstripTrack"></div>
-                </div>
-            </div>
 
             <nav class="filter-nav" id="filterNav" aria-label="作品分类">
                 <button class="filter-nav__btn is-active" data-cat="all">
@@ -140,8 +141,11 @@
                 <button class="filter-nav__btn" data-cat="信息流">
                     <span class="filter-nav__text">信息流</span>
                 </button>
-                <button class="filter-nav__btn" data-cat="AI原创剪辑">
-                    <span class="filter-nav__text">AI 剪辑</span>
+                <button class="filter-nav__btn" data-cat="AI生成">
+                    <span class="filter-nav__text">AI 生成</span>
+                </button>
+                <button class="filter-nav__btn" data-cat="混剪">
+                    <span class="filter-nav__text">混剪</span>
                 </button>
                 <span class="filter-nav__indicator" aria-hidden="true"></span>
             </nav>
@@ -172,16 +176,28 @@
                     <div class="category__grid" id="row-信息流"></div>
                 </section>
 
-                <section class="category" id="cat-AI原创剪辑" data-category="AI原创剪辑">
+                <section class="category" id="cat-AI生成" data-category="AI生成">
                     <header class="category__head">
                         <div class="category__head-row">
                             <span class="category__num">03</span>
                             <span class="category__rule"></span>
-                            <h2 class="category__title">AI 原创剪辑</h2>
+                            <h2 class="category__title">AI 生成</h2>
                         </div>
                         <p class="category__meta">Generative · Experimental</p>
                     </header>
-                    <div class="category__grid" id="row-AI原创剪辑"></div>
+                    <div class="category__grid" id="row-AI生成"></div>
+                </section>
+
+                <section class="category" id="cat-混剪" data-category="混剪">
+                    <header class="category__head">
+                        <div class="category__head-row">
+                            <span class="category__num">04</span>
+                            <span class="category__rule"></span>
+                            <h2 class="category__title">混剪</h2>
+                        </div>
+                        <p class="category__meta">Mashup · Remix</p>
+                    </header>
+                    <div class="category__grid" id="row-混剪"></div>
                 </section>
 
             </div>
