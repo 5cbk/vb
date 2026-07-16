@@ -2,9 +2,8 @@
    Video Portfolio — Editorial / Codrops Hub
    ============================================================ */
 
-/* 👇 ZSFT-el 字体引入 👇 */
-@font-face{font-family:"ZSFT-el";src:url("https://fontsapi.zeoseven.com/el/bold.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap;}
-@font-face{font-family:"ZSFT-el";src:url("https://fontsapi.zeoseven.com/el/main.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap;}
+/* 👇 Hello, i'm - ZSFT-591 👇 */
+@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/black.woff2") format("woff2");font-style:normal;font-weight:900;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/bold.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/extra-bold.woff2") format("woff2");font-style:normal;font-weight:800;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/extra-light.woff2") format("woff2");font-style:normal;font-weight:200;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/light.woff2") format("woff2");font-style:normal;font-weight:300;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/medium.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/main.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/semi-bold.woff2") format("woff2");font-style:normal;font-weight:600;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/thin.woff2") format("woff2");font-style:normal;font-weight:100;font-display:swap;}@font-face{font-family:"ZSFT-591";src:url("https://fontsapi.zeoseven.com/591/ultra.woff2") format("woff2");font-style:normal;font-weight:100;font-display:swap;}
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -199,31 +198,33 @@ body.cursor-hover .cursor--outer .cursor__circle { stroke-width: 1.5; r: 24; }
     gap: clamp(48px, 7vw, 120px); align-items: end; max-width: 1180px; width: 100%; margin: 0 auto;
 }
 
-.hero__label { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.62rem; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hero-muted); margin-bottom: 28px; }
+/* 👇 SiyinSong 标签字体 👇 */
+.hero__label { display: flex; align-items: center; gap: 10px; font-family: "SiyinSong", var(--font-mono); font-size: 0.62rem; font-weight: normal; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hero-muted); margin-bottom: 28px; }
+
 .hero__label-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--hero-accent); animation: pulseDot 2.4s ease-in-out infinite; }
 @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
 
 .hero__name { font-weight: 400; line-height: 1; margin-bottom: 28px; }
 .hero__name-line { display: block; overflow: hidden; will-change: transform; }
 
-/* 👇 "Hello," 修改为 ZSFT-el 👇 */
+/* 👇 "Hello," - ZSFT-591 👇 */
 .hero__name-line--hello {
-    font-family: "ZSFT-el", var(--font-italic);
+    font-family: "ZSFT-591", var(--font-italic);
     font-size: clamp(3rem, 8vw, 5.4rem);
     font-style: normal;
-    font-weight: 700;
+    font-weight: normal;
     letter-spacing: -0.025em;
     line-height: 1.02;
     color: var(--hero-text);
     margin-bottom: 0.12em;
 }
 
-/* 👇 "I'm" 修改为 ZSFT-el 👇 */
+/* 👇 "I'm" - ZSFT-591 👇 */
 .hero__name-line--im {
-    font-family: "ZSFT-el", var(--font-italic);
+    font-family: "ZSFT-591", var(--font-italic);
     font-size: clamp(1.55rem, 3.4vw, 2.25rem);
     font-style: normal;
-    font-weight: 400;
+    font-weight: normal;
     letter-spacing: -0.01em;
     line-height: 1.15;
     color: var(--hero-muted);
@@ -231,9 +232,9 @@ body.cursor-hover .cursor--outer .cursor__circle { stroke-width: 1.5; r: 24; }
     padding-left: 0.08em;
 }
 
-/* 👇 "欣欣" 修改为 851MkPOP 👇 */
+/* 👇 "欣欣" - YuFanDanQingSong 👇 */
 .hero__name-line--display {
-    font-family: "851MkPOP", 'Noto Sans SC', var(--font-display);
+    font-family: "YuFanDanQingSong", 'Noto Sans SC', var(--font-display);
     font-size: clamp(2.6rem, 6.5vw, 4.6rem);
     font-style: normal;
     font-weight: normal;
@@ -244,8 +245,12 @@ body.cursor-hover .cursor--outer .cursor__circle { stroke-width: 1.5; r: 24; }
     padding: 0.02em 0.04em 0.06em 0;
 }
 
-.hero__tagline { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--hero-dim); max-width: 320px; }
-.hero__bio { display: flex; flex-direction: column; gap: 16px; font-size: 0.88rem; font-weight: 300; line-height: 2; color: var(--hero-muted); margin-bottom: 32px; max-width: 400px; padding-top: 8px; border-top: 1px solid var(--hero-border); }
+/* 👇 描述 SiyinSong 👇 */
+.hero__tagline { font-family: "SiyinSong", var(--font-mono); font-size: 0.68rem; font-weight: normal; letter-spacing: 0.06em; color: var(--hero-dim); max-width: 320px; }
+
+/* 👇 简介 FlyFlowerSong 👇 */
+.hero__bio { display: flex; flex-direction: column; gap: 16px; font-family: "FlyFlowerSong", var(--font-body); font-weight: normal; font-size: 0.88rem; line-height: 2; color: var(--hero-muted); margin-bottom: 32px; max-width: 400px; padding-top: 8px; border-top: 1px solid var(--hero-border); }
+
 .hero__email { display: inline-flex; align-items: center; gap: 16px; margin-bottom: 36px; padding: 14px 0; border-top: 1px solid var(--hero-border); border-bottom: 1px solid var(--hero-border); transition: gap 0.4s var(--ease); }
 .hero__email:hover { gap: 22px; }
 .hero__email-label { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hero-dim); flex-shrink: 0; }
@@ -255,7 +260,10 @@ body.cursor-hover .cursor--outer .cursor__circle { stroke-width: 1.5; r: 24; }
 .hero__email:hover .hero__email-arrow { transform: translateX(4px); }
 
 .hero__skills { display: flex; flex-wrap: wrap; gap: 6px; }
-.hero__skills span { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.04em; padding: 8px 12px; border: 1px solid var(--hero-border); color: var(--hero-muted); transition: border-color 0.35s, color 0.35s, background 0.35s; }
+
+/* 👇 技能标签 SiyinSong 👇 */
+.hero__skills span { font-family: "SiyinSong", var(--font-mono); font-weight: normal; font-size: 0.56rem; letter-spacing: 0.04em; padding: 8px 12px; border: 1px solid var(--hero-border); color: var(--hero-muted); transition: border-color 0.35s, color 0.35s, background 0.35s; }
+
 .hero__skills span:hover { border-color: rgba(20, 18, 15, 0.2); color: var(--hero-text); background: rgba(20, 18, 15, 0.03); }
 
 .reveal-item { opacity: 0; transform: translateY(24px); }
@@ -274,11 +282,17 @@ body.cursor-hover .cursor--outer .cursor__circle { stroke-width: 1.5; r: 24; }
 .works__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; padding: 0 clamp(20px, 5vw, 56px) clamp(40px, 6vw, 64px); max-width: 1280px; margin: 0 auto; border-bottom: 1px solid var(--hero-border); }
 .works__eyebrow { display: block; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--hero-accent); margin-bottom: 16px; }
 .works__title { font-family: var(--font-display); font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1; color: var(--hero-text); }
-.works__desc { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; color: var(--hero-muted); max-width: 280px; text-align: right; line-height: 1.8; }
-.works__hint { display: inline-block; margin-top: 6px; color: var(--hero-accent); letter-spacing: 0.1em; font-size: 0.58rem; text-transform: uppercase; opacity: 0.85; }
+
+/* 👇 【已修改】调整了作品描述字体的字号 */
+.works__desc { font-family: "lilyshow240610C", var(--font-mono); font-weight: normal; font-size: 1.5rem; letter-spacing: 0.06em; color: var(--hero-muted); max-width: 320px; text-align: right; line-height: 1.8; }
+
+/* 👇 【已修改】调整了提示文字的字号（0.58rem -> 0.75rem） 👇 */
+.works__hint { display: inline-block; margin-top: 6px; color: var(--hero-accent); letter-spacing: 0.1em; font-size: 1.2rem; text-transform: uppercase; opacity: 0.85; }
 
 .filter-nav { position: sticky; top: var(--header-h); z-index: 400; display: flex; justify-content: center; gap: 0; padding: 0 clamp(16px, 4vw, 48px); background: rgba(232, 227, 216, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--hero-border); }
-.filter-nav__btn { position: relative; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 20px clamp(16px, 2.5vw, 28px); color: var(--hero-muted); transition: color 0.35s; z-index: 1; }
+
+/* 👇 【已修改】调整了分类导航按钮的字号（0.65rem -> 0.85rem） 👇 */
+.filter-nav__btn { position: relative; font-family: "lilyshow240610C", var(--font-mono); font-weight: normal; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 20px clamp(16px, 2.5vw, 28px); color: var(--hero-muted); transition: color 0.35s; z-index: 1; }
 .filter-nav__btn:hover { color: var(--hero-text); }
 .filter-nav__btn.is-active { color: var(--hero-accent); }
 .filter-nav__indicator { position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: var(--hero-accent); transition: left 0.45s var(--ease), width 0.45s var(--ease); pointer-events: none; }
