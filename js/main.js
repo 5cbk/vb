@@ -5,15 +5,15 @@
 gsap.registerPlugin(ScrollTrigger);
 
 const videos = [
-    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%8E%A7%E4%BB%B7.mp4' },
-    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%81%A5%E5%BA%B7.mp4' },
-    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E8%A1%A3%E6%9C%8D.mp4' },
-    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E7%BA%B8%E5%B7%BE.mp4' },
-    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E4%BF%9D%E6%B9%BF%E6%B0%B4.mp4' },
-    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%A5%BC.mp4' },
-    { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%95%BF%E5%BB%8A.mp4' },
-    { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%A5%B3%E9%85%8D%E6%88%90%E5%93%81.mp4' },
-    { category: '混剪', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%B7%B7%E5%89%AA.mp4' },
+    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%8E%A7%E4%BB%B7.mp4', thumb: '缩略图/控价.png' },
+    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%81%A5%E5%BA%B7.mp4', thumb: '缩略图/健康.png' },
+    { category: '口播', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E8%A1%A3%E6%9C%8D.mp4', thumb: '缩略图/衣服.png' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E7%BA%B8%E5%B7%BE.mp4', thumb: '缩略图/纸巾.png' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E4%BF%9D%E6%B9%BF%E6%B0%B4.mp4', thumb: '缩略图/保湿水.png' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%A5%BC.mp4', thumb: '缩略图/饼.png' },
+    { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%95%BF%E5%BB%8A.mp4', thumb: '缩略图/长廊.png' },
+    { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%A5%B3%E9%85%8D%E6%88%90%E5%93%81.mp4', thumb: '缩略图/女配.png' },
+    { category: '混剪', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%B7%B7%E5%89%AA.mp4', thumb: '缩略图/混剪.png' },
 ];
 
 const CATEGORIES = ['口播', '信息流', 'AI生成', '混剪'];
@@ -142,20 +142,15 @@ function buildCard(videoData, index) {
     media.className = 'hub-card__media';
     media.style.setProperty('--card-tilt', `${CARD_TILTS[index % CARD_TILTS.length]}deg`);
 
-    const loading = document.createElement('div');
-    loading.className = 'card__loading';
-    loading.innerHTML = '<div class="card__loading-line"></div>';
-
     const thumbWrap = document.createElement('div');
     thumbWrap.className = 'card__thumb-wrap';
 
-    const preview = document.createElement('video');
-    preview.className = 'card__preview';
-    preview.muted = true;
-    preview.loop = true;
-    preview.playsInline = true;
-    preview.preload = 'metadata';
-    preview.setAttribute('disablePictureInPicture', '');
+    const cover = document.createElement('img');
+    cover.className = 'card__cover';
+    cover.src = videoData.thumb;
+    cover.alt = '';
+    cover.draggable = false;
+    cover.loading = 'lazy';
 
     const overlay = document.createElement('div');
     overlay.className = 'card__overlay';
@@ -167,11 +162,10 @@ function buildCard(videoData, index) {
     const play = document.createElement('div');
     play.className = 'card__play';
 
-    thumbWrap.appendChild(preview);
+    thumbWrap.appendChild(cover);
     thumbWrap.appendChild(overlay);
     thumbWrap.appendChild(badge);
     thumbWrap.appendChild(play);
-    media.appendChild(loading);
     media.appendChild(thumbWrap);
 
     card.appendChild(media);
@@ -179,29 +173,9 @@ function buildCard(videoData, index) {
     card.addEventListener('click', () => playVideo(videoData));
     card.addEventListener('contextmenu', e => e.preventDefault());
 
-    setupCardCover(card, preview, loading, videoData.src);
-    setupCardPreview(card, preview, videoData.src);
     setupCardTilt(card, media);
 
     return card;
-}
-
-function setupCardCover(card, preview, loading, src) {
-    let frameReady = false;
-    const revealCover = () => {
-        if (frameReady || card.classList.contains('is-previewing')) return;
-        frameReady = true;
-        preview.pause();
-        loading.classList.add('hidden');
-        card.classList.add('has-cover');
-    };
-    preview.addEventListener('loadeddata', () => {
-        if (preview.duration > 0.05) preview.currentTime = 0.05;
-        else revealCover();
-    });
-    preview.addEventListener('seeked', revealCover);
-    preview.addEventListener('error', () => loading.classList.add('hidden'));
-    preview.src = src;
 }
 
 function setupCardTilt(card, media) {
@@ -217,18 +191,25 @@ function setupCardTilt(card, media) {
     });
 }
 
-function setupCardPreview(card, preview, src) {
-    if (window.matchMedia('(hover: none)').matches) return;
-    card.addEventListener('mouseenter', () => {
-        card.classList.add('is-previewing');
-        preview.currentTime = 0;
-        preview.play().catch(() => {});
-    });
-    card.addEventListener('mouseleave', () => {
-        card.classList.remove('is-previewing');
-        preview.pause();
-        if (card.classList.contains('has-cover')) preview.currentTime = 0.05;
-    });
+function buildFilmstrip() {
+    const track = document.getElementById('filmstripTrack');
+    if (!track) return;
+    track.innerHTML = '';
+    const appendItems = () => {
+        videos.forEach(v => {
+            const item = document.createElement('div');
+            item.className = 'filmstrip__item';
+            const img = document.createElement('img');
+            img.src = v.thumb;
+            img.alt = '';
+            img.draggable = false;
+            img.loading = 'lazy';
+            item.appendChild(img);
+            track.appendChild(item);
+        });
+    };
+    appendItems();
+    appendItems();
 }
 
 function buildAllCards() {
@@ -427,6 +408,7 @@ function init() {
     gsap.set('.hero__corner', { opacity: 0 });
 
     buildAllCards();
+    buildFilmstrip();
     setupLenis();
     setupFilterNav();
     setupCursor();
