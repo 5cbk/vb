@@ -315,8 +315,8 @@ body.cursor-hover .cursor--outer .cursor__circle { stroke-width: 1.5; r: 24; }
 .category__grid { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 2.5vw, 28px); max-width: 1280px; margin: 0 auto; }
 
 .hub-card { position: relative; width: clamp(200px, 22vw, 260px); flex: 0 0 auto; cursor: none; opacity: 0; transform: translateY(48px) scale(0.96); will-change: transform; perspective: 900px; transition: opacity 0.4s, transform 0.4s var(--ease-out); }
-.hub-card[data-category="混剪"] { width: clamp(280px, 40vw, 480px); }
-.hub-card[data-category="混剪"] .hub-card__media { aspect-ratio: 16 / 9; }
+.hub-card[data-category="混剪卡点"] { width: clamp(280px, 40vw, 480px); }
+.hub-card[data-category="混剪卡点"] .hub-card__media { aspect-ratio: 16 / 9; }
 
 .hub-card.is-visible { animation: cardIn 0.9s var(--ease) forwards; }
 @keyframes cardIn { to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -396,7 +396,7 @@ body.cursor-hover .cursor--outer .cursor__circle { stroke-width: 1.5; r: 24; }
     .filter-nav__btn { flex-shrink: 0; }
     .category__grid { gap: 12px; }
     .hub-card { width: 42vw; max-width: 200px; cursor: auto; }
-    .hub-card[data-category="混剪"] { width: 88vw; max-width: 480px; }
+    .hub-card[data-category="混剪卡点"] { width: 88vw; max-width: 480px; }
     .hub-card:hover { box-shadow: none; }
     .card__play { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
     .card__badge { opacity: 1; transform: none; }

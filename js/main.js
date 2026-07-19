@@ -13,10 +13,11 @@ const videos = [
     { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%A5%BC.mp4', thumb: '缩略图/饼.png' },
     { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%95%BF%E5%BB%8A.mp4', thumb: '缩略图/长廊.png' },
     { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%A5%B3%E9%85%8D%E6%88%90%E5%93%81.mp4', thumb: '缩略图/女配.png' },
-    { category: '混剪', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%B7%B7%E5%89%AA.mp4', thumb: '缩略图/混剪.png' },
+    { category: '混剪卡点', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%B7%B7%E5%89%AA.mp4', thumb: '缩略图/混剪.png' },
+    { category: '混剪卡点', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%8D%A1%E7%82%B9.mp4', thumb: '缩略图/卡点.png' },
 ];
 
-const CATEGORIES = ['口播', '信息流', 'AI生成', '混剪'];
+const CATEGORIES = ['口播', '信息流', 'AI生成', '混剪卡点'];
 
 const overlayPath = document.querySelector('.overlay__path');
 const modal = document.getElementById('modal');
