@@ -11,6 +11,8 @@ const videos = [
     { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%B2%89%E6%B5%B8%E5%BC%8F.mp4', thumb: '缩略图/沉浸式.png' },
     { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E4%BA%8E%E9%9C%87200.mp4', thumb: '缩略图/于震.png' },
     { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E4%B8%AD%E7%A7%8B%E8%8A%82.mp4', thumb: '缩略图/中秋节.png' },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E7%9F%AD%E5%89%A71.mp4', thumb: '缩略图/短剧1.png', newRow: true },
+    { category: '信息流', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E7%9F%AD%E5%89%A72.mp4', thumb: '缩略图/短剧2.png' },
     { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E9%95%BF%E5%BB%8A.mp4', thumb: '缩略图/长廊.png' },
     { category: 'AI生成', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E5%A5%B3%E9%85%8D%E6%88%90%E5%93%81.mp4', thumb: '缩略图/女配.png' },
     { category: '混剪卡点', src: 'https://zuopinji-1421400524.cos.ap-guangzhou.myqcloud.com/%E6%B7%B7%E5%89%AA.mp4', thumb: '缩略图/混剪.png' },
@@ -218,6 +220,12 @@ function buildAllCards() {
         const grid = document.getElementById(`row-${category}`);
         if (!grid) return;
         videos.filter(v => v.category === category).forEach((video, i) => {
+            if (video.newRow) {
+                const breakEl = document.createElement('div');
+                breakEl.className = 'category__row-break';
+                breakEl.setAttribute('aria-hidden', 'true');
+                grid.appendChild(breakEl);
+            }
             grid.appendChild(buildCard(video, i));
         });
     });
